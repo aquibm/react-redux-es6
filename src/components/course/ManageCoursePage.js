@@ -22,7 +22,7 @@ class ManageCoursePage extends React.Component {
     componentWillReceiveProps(nextProps) {
         if(this.props.course.id != nextProps.course.id) {
             this.setState({
-                course: Object.assign({}, nextProps.course),
+                course: Object.assign({}, nextProps.course)
             });
         }
     }
@@ -39,18 +39,19 @@ class ManageCoursePage extends React.Component {
 
     saveCourse(event) {
         event.preventDefault(); // Stop the default form submit.
-        this.setState({
-            isSaving: true
-        });
+        this.setState({isSaving: true});
 
         this.props.actions.saveCourse(this.state.course).then(() => {
             this.redirect();
+        }).catch((error) => {
+            toastr.error(error);
+            this.setState({isSaving: false});
         });
     }
 
     redirect() {
-        this.setState({saving: false});
         toastr.success('Course saved');
+        this.setState({isSaving: false});
         this.context.router.push('/courses');
     }
 
